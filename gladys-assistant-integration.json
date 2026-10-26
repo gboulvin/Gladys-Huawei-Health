@@ -1,0 +1,824 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Huawei Health",
+  "description": {
+    "en": "Huawei watches, bands and scales: steps, heart, SpO2, sleep and weight in Gladys.",
+    "fr": "Montres, bracelets et balances Huawei : pas, cœur, SpO2, sommeil et poids dans Gladys.",
+    "de": "Huawei-Uhren, -Armbänder und -Waagen: Schritte, Herz, SpO2, Schlaf, Gewicht in Gladys.",
+    "es": "Relojes, pulseras y básculas Huawei: pasos, corazón, SpO2, sueño y peso en Gladys."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/gboulvin/gladys-huawei-health:1.0.0",
+  "gladys_version": ">=5.3.0",
+  "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Huawei-Health/main/cover.png",
+  "categories": ["leisure", "services"],
+  "keywords": [
+    "Huawei Health",
+    "Huawei Santé",
+    "Health Kit",
+    "Watch GT",
+    "Watch Fit",
+    "Huawei Band",
+    "Huawei Scale",
+    "SpO2",
+    "sleep",
+    "santé"
+  ],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Your Huawei developer app",
+        "fr": "Votre application développeur Huawei",
+        "de": "Ihre Huawei-Entwickler-App",
+        "es": "Su aplicación de desarrollador Huawei"
+      },
+      "description": {
+        "en": "Huawei only shares Huawei Health data with apps approved for Health Service Kit. Create an app on HUAWEI Developers, apply for Health Service Kit with the read scopes of the data below (review: about 10 working days), declare the redirect URI shown under the Connect button, then enter the Client ID and Client secret here. The documentation link details every step.",
+        "fr": "Huawei ne partage les données Huawei Santé qu'avec des applications validées pour Health Service Kit. Créez une application sur HUAWEI Developers, demandez Health Service Kit avec les permissions de lecture des données ci-dessous (examen : environ 10 jours ouvrés), déclarez l'adresse de redirection affichée sous le bouton Connecter, puis saisissez ici le Client ID et le Client secret. La documentation détaille chaque étape.",
+        "de": "Huawei teilt Huawei Health-Daten nur mit Apps, die für Health Service Kit freigegeben sind. Erstellen Sie eine App auf HUAWEI Developers, beantragen Sie Health Service Kit mit den Leseberechtigungen der unten gewählten Daten (Prüfung: etwa 10 Werktage), hinterlegen Sie die unter der Schaltfläche Verbinden angezeigte Weiterleitungs-URI und geben Sie hier Client-ID und Client-Secret ein. Die Dokumentation beschreibt jeden Schritt.",
+        "es": "Huawei solo comparte los datos de Huawei Salud con aplicaciones aprobadas para Health Service Kit. Cree una aplicación en HUAWEI Developers, solicite Health Service Kit con los permisos de lectura de los datos siguientes (revisión: unos 10 días hábiles), declare la URI de redirección que aparece bajo el botón Conectar e introduzca aquí el Client ID y el Client secret. La documentación detalla cada paso."
+      },
+      "links": [
+        {
+          "url": "https://developer.huawei.com/consumer/en/console",
+          "label": {
+            "en": "HUAWEI Developers console",
+            "fr": "Console HUAWEI Developers",
+            "de": "HUAWEI Developers-Konsole",
+            "es": "Consola HUAWEI Developers"
+          }
+        },
+        {
+          "url": "https://developer.huawei.com/consumer/en/doc/hmscore-guides/apply-kitservice-0000001050707556",
+          "label": {
+            "en": "Applying for Health Service Kit",
+            "fr": "Demander Health Service Kit",
+            "de": "Health Service Kit beantragen",
+            "es": "Solicitar Health Service Kit"
+          }
+        }
+      ]
+    },
+    {
+      "key": "client_id",
+      "type": "string",
+      "label": {
+        "en": "Client ID (App ID)",
+        "fr": "Client ID (App ID)",
+        "de": "Client-ID (App-ID)",
+        "es": "Client ID (App ID)"
+      },
+      "description": {
+        "en": "OAuth 2.0 client ID of your app, in the HUAWEI Developers console.",
+        "fr": "Client ID OAuth 2.0 de votre application, dans la console HUAWEI Developers.",
+        "de": "OAuth-2.0-Client-ID Ihrer App in der HUAWEI Developers-Konsole.",
+        "es": "Client ID OAuth 2.0 de su aplicación, en la consola HUAWEI Developers."
+      },
+      "placeholder": {
+        "en": "e.g. 101234567",
+        "fr": "ex. 101234567",
+        "de": "z. B. 101234567",
+        "es": "p. ej. 101234567"
+      },
+      "required": true
+    },
+    {
+      "key": "client_secret",
+      "type": "secret",
+      "label": {
+        "en": "Client secret",
+        "fr": "Client secret",
+        "de": "Client-Secret",
+        "es": "Client secret"
+      },
+      "description": {
+        "en": "OAuth 2.0 client secret of the same app.",
+        "fr": "Client secret OAuth 2.0 de la même application.",
+        "de": "OAuth-2.0-Client-Secret derselben App.",
+        "es": "Client secret OAuth 2.0 de la misma aplicación."
+      },
+      "required": true
+    },
+    {
+      "key": "data_groups",
+      "type": "multi_select",
+      "label": {
+        "en": "Data to read",
+        "fr": "Données à lire",
+        "de": "Zu lesende Daten",
+        "es": "Datos que leer"
+      },
+      "description": {
+        "en": "Only tick what your Huawei app was approved for: Huawei refuses the connection when a scope was not granted. Click Connect again after a change.",
+        "fr": "Ne cochez que ce que votre application Huawei a obtenu : Huawei refuse la connexion si une permission n'a pas été accordée. Cliquez à nouveau sur Connecter après un changement.",
+        "de": "Wählen Sie nur, wofür Ihre Huawei-App freigegeben wurde: Huawei verweigert die Verbindung bei einer nicht gewährten Berechtigung. Klicken Sie nach einer Änderung erneut auf Verbinden.",
+        "es": "Marque solo lo que su aplicación Huawei tiene aprobado: Huawei rechaza la conexión si un permiso no fue concedido. Vuelva a hacer clic en Conectar tras un cambio."
+      },
+      "required": false,
+      "default": [
+        "activity",
+        "heart_rate",
+        "spo2",
+        "stress",
+        "body_temperature",
+        "weight",
+        "sleep"
+      ],
+      "options": [
+        {
+          "value": "activity",
+          "label": {
+            "en": "Activity (steps, calories, distance)",
+            "fr": "Activité (pas, calories, distance)",
+            "de": "Aktivität (Schritte, Kalorien, Strecke)",
+            "es": "Actividad (pasos, calorías, distancia)"
+          }
+        },
+        {
+          "value": "heart_rate",
+          "label": {
+            "en": "Heart rate (current, resting, HRV)",
+            "fr": "Fréquence cardiaque (actuelle, repos, VFC)",
+            "de": "Herzfrequenz (aktuell, Ruhe, HRV)",
+            "es": "Frecuencia cardiaca (actual, reposo, VFC)"
+          }
+        },
+        {
+          "value": "spo2",
+          "label": {
+            "en": "Blood oxygen (SpO2)",
+            "fr": "Oxygène sanguin (SpO2)",
+            "de": "Blutsauerstoff (SpO2)",
+            "es": "Oxígeno en sangre (SpO2)"
+          }
+        },
+        {
+          "value": "stress",
+          "label": {
+            "en": "Stress",
+            "fr": "Stress",
+            "de": "Stress",
+            "es": "Estrés"
+          }
+        },
+        {
+          "value": "body_temperature",
+          "label": {
+            "en": "Body and skin temperature",
+            "fr": "Température corporelle et cutanée",
+            "de": "Körper- und Hauttemperatur",
+            "es": "Temperatura corporal y cutánea"
+          }
+        },
+        {
+          "value": "weight",
+          "label": {
+            "en": "Weight and body composition",
+            "fr": "Poids et composition corporelle",
+            "de": "Gewicht und Körperzusammensetzung",
+            "es": "Peso y composición corporal"
+          }
+        },
+        {
+          "value": "sleep",
+          "label": {
+            "en": "Sleep",
+            "fr": "Sommeil",
+            "de": "Schlaf",
+            "es": "Sueño"
+          }
+        }
+      ]
+    },
+    {
+      "key": "huawei_account",
+      "type": "oauth2",
+      "label": {
+        "en": "Huawei account",
+        "fr": "Compte Huawei",
+        "de": "Huawei-Konto",
+        "es": "Cuenta Huawei"
+      },
+      "description": {
+        "en": "Save the Client ID and secret first, then sign in with the HUAWEI ID used by the Huawei Health app.",
+        "fr": "Enregistrez d'abord le Client ID et le secret, puis connectez-vous avec le HUAWEI ID utilisé par l'application Huawei Santé.",
+        "de": "Speichern Sie zuerst Client-ID und Secret und melden Sie sich dann mit der HUAWEI ID der Huawei Health-App an.",
+        "es": "Guarde primero el Client ID y el secreto, y luego inicie sesión con el HUAWEI ID de la app Huawei Salud."
+      }
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the Huawei Health cloud is read (5 minutes minimum). Your watch syncs through the Huawei Health app on your phone.",
+        "fr": "Fréquence de lecture du cloud Huawei Santé (5 minutes minimum). Votre montre se synchronise via l'application Huawei Santé de votre téléphone.",
+        "de": "Wie oft die Huawei Health Cloud gelesen wird (mindestens 5 Minuten). Ihre Uhr synchronisiert über die Huawei Health-App auf Ihrem Telefon.",
+        "es": "Frecuencia de lectura de la nube Huawei Salud (5 minutos mínimo). Su reloj se sincroniza a través de la app Huawei Salud del teléfono."
+      },
+      "required": false,
+      "default": 900,
+      "min": 300,
+      "max": 3600
+    },
+    {
+      "key": "timezone",
+      "type": "string",
+      "label": {
+        "en": "Time zone",
+        "fr": "Fuseau horaire",
+        "de": "Zeitzone",
+        "es": "Zona horaria"
+      },
+      "description": {
+        "en": "IANA time zone used to cut the days (today's steps) and show times.",
+        "fr": "Fuseau horaire IANA utilisé pour découper les journées (pas du jour) et afficher les heures.",
+        "de": "IANA-Zeitzone für die Tagesgrenzen (heutige Schritte) und die Uhrzeiten.",
+        "es": "Zona horaria IANA usada para delimitar los días (pasos de hoy) y mostrar las horas."
+      },
+      "placeholder": {
+        "en": "e.g. Europe/Paris",
+        "fr": "ex. Europe/Paris",
+        "de": "z. B. Europe/Berlin",
+        "es": "p. ej. Europe/Madrid"
+      },
+      "required": false,
+      "default": "Europe/Paris"
+    },
+    {
+      "key": "step_goal",
+      "type": "number",
+      "label": {
+        "en": "Daily step goal",
+        "fr": "Objectif de pas quotidien",
+        "de": "Tägliches Schrittziel",
+        "es": "Objetivo diario de pasos"
+      },
+      "description": {
+        "en": "Fires the \"Step goal reached\" scene trigger and fills the activity widget gauge.",
+        "fr": "Déclenche « Objectif de pas atteint » et remplit la jauge du widget d'activité.",
+        "de": "Löst „Schrittziel erreicht“ aus und füllt die Anzeige des Aktivitäts-Widgets.",
+        "es": "Activa «Objetivo de pasos alcanzado» y llena el indicador del widget de actividad."
+      },
+      "required": false,
+      "default": 10000,
+      "min": 100,
+      "max": 100000
+    },
+    {
+      "key": "heart_rate_high",
+      "type": "number",
+      "label": {
+        "en": "High heart rate alert (bpm)",
+        "fr": "Alerte fréquence cardiaque haute (bpm)",
+        "de": "Warnung hohe Herzfrequenz (bpm)",
+        "es": "Alerta frecuencia cardiaca alta (lpm)"
+      },
+      "required": false,
+      "default": 120,
+      "min": 60,
+      "max": 250
+    },
+    {
+      "key": "heart_rate_low",
+      "type": "number",
+      "label": {
+        "en": "Low heart rate alert (bpm)",
+        "fr": "Alerte fréquence cardiaque basse (bpm)",
+        "de": "Warnung niedrige Herzfrequenz (bpm)",
+        "es": "Alerta frecuencia cardiaca baja (lpm)"
+      },
+      "required": false,
+      "default": 40,
+      "min": 20,
+      "max": 100
+    },
+    {
+      "key": "spo2_low",
+      "type": "number",
+      "label": {
+        "en": "Low blood oxygen alert (%)",
+        "fr": "Alerte oxygène sanguin bas (%)",
+        "de": "Warnung niedriger Blutsauerstoff (%)",
+        "es": "Alerta oxígeno en sangre bajo (%)"
+      },
+      "required": false,
+      "default": 92,
+      "min": 70,
+      "max": 100
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 60
+    },
+    {
+      "key": "sync_now",
+      "label": {
+        "en": "Synchronize now",
+        "fr": "Synchroniser maintenant",
+        "de": "Jetzt synchronisieren",
+        "es": "Sincronizar ahora"
+      },
+      "timeout_seconds": 60
+    },
+    {
+      "key": "sign_out",
+      "label": {
+        "en": "Sign out",
+        "fr": "Se déconnecter",
+        "de": "Abmelden",
+        "es": "Cerrar sesión"
+      }
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "sleep_recorded",
+      "label": {
+        "en": "Night of sleep recorded",
+        "fr": "Nuit de sommeil enregistrée",
+        "de": "Schlafnacht aufgezeichnet",
+        "es": "Noche de sueño registrada"
+      },
+      "description": {
+        "en": "A new night of sleep reached the Huawei Health cloud.",
+        "fr": "Une nouvelle nuit de sommeil est arrivée dans le cloud Huawei Santé.",
+        "de": "Eine neue Schlafnacht ist in der Huawei Health Cloud angekommen.",
+        "es": "Una nueva noche de sueño ha llegado a la nube Huawei Salud."
+      },
+      "variables": [
+        {
+          "key": "sleep_score",
+          "type": "number",
+          "label": {
+            "en": "Sleep score",
+            "fr": "Score de sommeil",
+            "de": "Schlafwert",
+            "es": "Puntuación de sueño"
+          }
+        },
+        {
+          "key": "sleep_minutes",
+          "type": "number",
+          "label": {
+            "en": "Sleep duration (min)",
+            "fr": "Durée de sommeil (min)",
+            "de": "Schlafdauer (min)",
+            "es": "Duración del sueño (min)"
+          }
+        },
+        {
+          "key": "deep_sleep_minutes",
+          "type": "number",
+          "label": {
+            "en": "Deep sleep (min)",
+            "fr": "Sommeil profond (min)",
+            "de": "Tiefschlaf (min)",
+            "es": "Sueño profundo (min)"
+          }
+        },
+        {
+          "key": "wakeup_time",
+          "type": "string",
+          "label": {
+            "en": "Wake-up time",
+            "fr": "Heure de réveil",
+            "de": "Aufwachzeit",
+            "es": "Hora de despertar"
+          }
+        }
+      ]
+    },
+    {
+      "key": "step_goal_reached",
+      "label": {
+        "en": "Daily step goal reached",
+        "fr": "Objectif de pas quotidien atteint",
+        "de": "Tägliches Schrittziel erreicht",
+        "es": "Objetivo diario de pasos alcanzado"
+      },
+      "description": {
+        "en": "Today's steps passed the goal set in the configuration (once a day).",
+        "fr": "Les pas du jour ont dépassé l'objectif de la configuration (une fois par jour).",
+        "de": "Die heutigen Schritte haben das konfigurierte Ziel überschritten (einmal pro Tag).",
+        "es": "Los pasos de hoy superaron el objetivo configurado (una vez al día)."
+      },
+      "variables": [
+        {
+          "key": "steps",
+          "type": "number",
+          "label": {
+            "en": "Steps",
+            "fr": "Pas",
+            "de": "Schritte",
+            "es": "Pasos"
+          }
+        },
+        {
+          "key": "step_goal",
+          "type": "number",
+          "label": {
+            "en": "Step goal",
+            "fr": "Objectif de pas",
+            "de": "Schrittziel",
+            "es": "Objetivo de pasos"
+          }
+        }
+      ]
+    },
+    {
+      "key": "heart_rate_alert",
+      "label": {
+        "en": "Abnormal heart rate",
+        "fr": "Fréquence cardiaque anormale",
+        "de": "Auffällige Herzfrequenz",
+        "es": "Frecuencia cardiaca anómala"
+      },
+      "description": {
+        "en": "A new heart rate measurement went above or below the configured thresholds.",
+        "fr": "Une nouvelle mesure de fréquence cardiaque a dépassé les seuils configurés.",
+        "de": "Eine neue Herzfrequenzmessung liegt über oder unter den konfigurierten Grenzwerten.",
+        "es": "Una nueva medición de frecuencia cardiaca superó los umbrales configurados."
+      },
+      "fields": [
+        {
+          "key": "direction",
+          "type": "select",
+          "label": {
+            "en": "Direction",
+            "fr": "Sens",
+            "de": "Richtung",
+            "es": "Sentido"
+          },
+          "options": [
+            {
+              "value": "high",
+              "label": {
+                "en": "Too high",
+                "fr": "Trop haute",
+                "de": "Zu hoch",
+                "es": "Demasiado alta"
+              }
+            },
+            {
+              "value": "low",
+              "label": {
+                "en": "Too low",
+                "fr": "Trop basse",
+                "de": "Zu niedrig",
+                "es": "Demasiado baja"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "heart_rate",
+          "type": "number",
+          "label": {
+            "en": "Heart rate (bpm)",
+            "fr": "Fréquence cardiaque (bpm)",
+            "de": "Herzfrequenz (bpm)",
+            "es": "Frecuencia cardiaca (lpm)"
+          }
+        },
+        {
+          "key": "direction",
+          "type": "string",
+          "label": {
+            "en": "Direction (high/low)",
+            "fr": "Sens (high/low)",
+            "de": "Richtung (high/low)",
+            "es": "Sentido (high/low)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "spo2_low",
+      "label": {
+        "en": "Low blood oxygen",
+        "fr": "Oxygène sanguin bas",
+        "de": "Niedriger Blutsauerstoff",
+        "es": "Oxígeno en sangre bajo"
+      },
+      "description": {
+        "en": "A new SpO2 measurement fell below the configured threshold.",
+        "fr": "Une nouvelle mesure de SpO2 est passée sous le seuil configuré.",
+        "de": "Eine neue SpO2-Messung liegt unter dem konfigurierten Grenzwert.",
+        "es": "Una nueva medición de SpO2 bajó del umbral configurado."
+      },
+      "variables": [
+        {
+          "key": "spo2",
+          "type": "number",
+          "label": {
+            "en": "SpO2 (%)",
+            "fr": "SpO2 (%)",
+            "de": "SpO2 (%)",
+            "es": "SpO2 (%)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "weight_measured",
+      "label": {
+        "en": "New weigh-in",
+        "fr": "Nouvelle pesée",
+        "de": "Neue Wiegung",
+        "es": "Nuevo pesaje"
+      },
+      "description": {
+        "en": "A new weight reached Huawei Health (Huawei scale or manual entry).",
+        "fr": "Un nouveau poids est arrivé dans Huawei Santé (balance Huawei ou saisie manuelle).",
+        "de": "Ein neues Gewicht ist in Huawei Health angekommen (Huawei-Waage oder manuelle Eingabe).",
+        "es": "Un nuevo peso ha llegado a Huawei Salud (báscula Huawei o entrada manual)."
+      },
+      "variables": [
+        {
+          "key": "weight",
+          "type": "number",
+          "label": {
+            "en": "Weight (kg)",
+            "fr": "Poids (kg)",
+            "de": "Gewicht (kg)",
+            "es": "Peso (kg)"
+          }
+        },
+        {
+          "key": "bmi",
+          "type": "number",
+          "label": {
+            "en": "Body mass index",
+            "fr": "Indice de masse corporelle",
+            "de": "Body-Mass-Index",
+            "es": "Índice de masa corporal"
+          }
+        },
+        {
+          "key": "body_fat_rate",
+          "type": "number",
+          "label": {
+            "en": "Body fat (%)",
+            "fr": "Masse grasse (%)",
+            "de": "Körperfett (%)",
+            "es": "Grasa corporal (%)"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "refresh_data",
+      "label": {
+        "en": "Synchronize Huawei Health",
+        "fr": "Synchroniser Huawei Santé",
+        "de": "Huawei Health synchronisieren",
+        "es": "Sincronizar Huawei Salud"
+      },
+      "description": {
+        "en": "Read the Huawei Health cloud now, without waiting for the next refresh.",
+        "fr": "Lit le cloud Huawei Santé maintenant, sans attendre le prochain rafraîchissement.",
+        "de": "Liest die Huawei Health Cloud sofort, ohne auf die nächste Aktualisierung zu warten.",
+        "es": "Lee la nube Huawei Salud ahora, sin esperar a la próxima actualización."
+      },
+      "timeout_seconds": 60,
+      "outputs": [
+        {
+          "key": "synced",
+          "type": "boolean",
+          "label": {
+            "en": "Synchronized",
+            "fr": "Synchronisé",
+            "de": "Synchronisiert",
+            "es": "Sincronizado"
+          }
+        }
+      ]
+    },
+    {
+      "key": "get_health_summary",
+      "label": {
+        "en": "Get the health summary",
+        "fr": "Obtenir le résumé santé",
+        "de": "Gesundheitsübersicht abrufen",
+        "es": "Obtener el resumen de salud"
+      },
+      "description": {
+        "en": "Today's values as scene variables (steps, heart rate, sleep, weight...).",
+        "fr": "Les valeurs du jour en variables de scène (pas, cœur, sommeil, poids...).",
+        "de": "Die heutigen Werte als Szenenvariablen (Schritte, Herzfrequenz, Schlaf, Gewicht...).",
+        "es": "Los valores de hoy como variables de escena (pasos, corazón, sueño, peso...)."
+      },
+      "timeout_seconds": 60,
+      "fields": [
+        {
+          "key": "refresh",
+          "type": "boolean",
+          "label": {
+            "en": "Synchronize first",
+            "fr": "Synchroniser d'abord",
+            "de": "Zuerst synchronisieren",
+            "es": "Sincronizar primero"
+          },
+          "required": false,
+          "default": false
+        }
+      ],
+      "outputs": [
+        {
+          "key": "steps",
+          "type": "number",
+          "label": {
+            "en": "Steps today",
+            "fr": "Pas du jour",
+            "de": "Schritte heute",
+            "es": "Pasos de hoy"
+          }
+        },
+        {
+          "key": "active_calories",
+          "type": "number",
+          "label": {
+            "en": "Active calories (kcal)",
+            "fr": "Calories actives (kcal)",
+            "de": "Aktivkalorien (kcal)",
+            "es": "Calorías activas (kcal)"
+          }
+        },
+        {
+          "key": "distance",
+          "type": "number",
+          "label": {
+            "en": "Distance (m)",
+            "fr": "Distance (m)",
+            "de": "Strecke (m)",
+            "es": "Distancia (m)"
+          }
+        },
+        {
+          "key": "heart_rate",
+          "type": "number",
+          "label": {
+            "en": "Heart rate (bpm)",
+            "fr": "Fréquence cardiaque (bpm)",
+            "de": "Herzfrequenz (bpm)",
+            "es": "Frecuencia cardiaca (lpm)"
+          }
+        },
+        {
+          "key": "resting_heart_rate",
+          "type": "number",
+          "label": {
+            "en": "Resting heart rate (bpm)",
+            "fr": "Fréquence cardiaque au repos (bpm)",
+            "de": "Ruhepuls (bpm)",
+            "es": "Frecuencia cardiaca en reposo (lpm)"
+          }
+        },
+        {
+          "key": "spo2",
+          "type": "number",
+          "label": {
+            "en": "SpO2 (%)",
+            "fr": "SpO2 (%)",
+            "de": "SpO2 (%)",
+            "es": "SpO2 (%)"
+          }
+        },
+        {
+          "key": "stress",
+          "type": "number",
+          "label": {
+            "en": "Stress score",
+            "fr": "Score de stress",
+            "de": "Stresswert",
+            "es": "Puntuación de estrés"
+          }
+        },
+        {
+          "key": "weight",
+          "type": "number",
+          "label": {
+            "en": "Weight (kg)",
+            "fr": "Poids (kg)",
+            "de": "Gewicht (kg)",
+            "es": "Peso (kg)"
+          }
+        },
+        {
+          "key": "sleep_score",
+          "type": "number",
+          "label": {
+            "en": "Sleep score",
+            "fr": "Score de sommeil",
+            "de": "Schlafwert",
+            "es": "Puntuación de sueño"
+          }
+        },
+        {
+          "key": "sleep_minutes",
+          "type": "number",
+          "label": {
+            "en": "Sleep duration (min)",
+            "fr": "Durée de sommeil (min)",
+            "de": "Schlafdauer (min)",
+            "es": "Duración del sueño (min)"
+          }
+        },
+        {
+          "key": "synced_at",
+          "type": "string",
+          "label": {
+            "en": "Last sync (HH:mm)",
+            "fr": "Dernière synchro (HH:mm)",
+            "de": "Letzte Synchronisierung (HH:mm)",
+            "es": "Última sincronización (HH:mm)"
+          }
+        },
+        {
+          "key": "synced",
+          "type": "boolean",
+          "label": {
+            "en": "Data available",
+            "fr": "Données disponibles",
+            "de": "Daten verfügbar",
+            "es": "Datos disponibles"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "health_overview",
+      "label": {
+        "en": "Huawei Health",
+        "fr": "Huawei Santé",
+        "de": "Huawei Health",
+        "es": "Huawei Salud"
+      },
+      "description": {
+        "en": "Steps, heart rate, SpO2, stress, sleep and weight, with your devices.",
+        "fr": "Pas, fréquence cardiaque, SpO2, stress, sommeil et poids, avec vos appareils.",
+        "de": "Schritte, Herzfrequenz, SpO2, Stress, Schlaf und Gewicht, mit Ihren Geräten.",
+        "es": "Pasos, frecuencia cardiaca, SpO2, estrés, sueño y peso, con sus dispositivos."
+      },
+      "icon": "heart",
+      "action_timeout_seconds": 60
+    },
+    {
+      "key": "activity_today",
+      "label": {
+        "en": "Huawei activity",
+        "fr": "Activité Huawei",
+        "de": "Huawei-Aktivität",
+        "es": "Actividad Huawei"
+      },
+      "description": {
+        "en": "Step goal gauge, active calories, distance and the steps of the last 7 days.",
+        "fr": "Jauge d'objectif de pas, calories actives, distance et pas des 7 derniers jours.",
+        "de": "Schrittziel-Anzeige, Aktivkalorien, Strecke und Schritte der letzten 7 Tage.",
+        "es": "Indicador de objetivo de pasos, calorías activas, distancia y pasos de los últimos 7 días."
+      },
+      "icon": "activity",
+      "action_timeout_seconds": 60
+    },
+    {
+      "key": "sleep_last_night",
+      "label": {
+        "en": "Huawei sleep",
+        "fr": "Sommeil Huawei",
+        "de": "Huawei-Schlaf",
+        "es": "Sueño Huawei"
+      },
+      "description": {
+        "en": "Last night's score and sleep phases, with the heart rate chart.",
+        "fr": "Score et phases de la dernière nuit, avec la courbe de fréquence cardiaque.",
+        "de": "Wert und Schlafphasen der letzten Nacht, mit Herzfrequenzkurve.",
+        "es": "Puntuación y fases de la última noche, con la curva de frecuencia cardiaca."
+      },
+      "icon": "moon"
+    }
+  ]
+}
