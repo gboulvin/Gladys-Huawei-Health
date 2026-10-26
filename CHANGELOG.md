@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-26
+
 ### Added
 
 - First version of the Huawei Health integration, through Huawei's official
@@ -24,3 +26,6 @@ the notes of the version's GitHub Release.
 - Dashboard widgets: health overview, activity of the day, last night's sleep.
 - Configuration actions: test the connection, synchronize now, sign out.
 - English, French, German and Spanish.
+
+[Unreleased]: https://github.com/gboulvin/Gladys-Huawei-Health/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/gboulvin/Gladys-Huawei-Health/releases/tag/v1.0.1

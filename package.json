@@ -1,6 +1,6 @@
 {
   "name": "gladys-huawei-health",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Huawei Health external integration for Gladys Assistant: Huawei watches, bands and scales through the Health Service Kit cloud API.",
   "type": "module",

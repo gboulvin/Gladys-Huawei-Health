@@ -8,8 +8,8 @@
     "de": "Huawei-Uhren, -Armbänder und -Waagen: Schritte, Herz, SpO2, Schlaf, Gewicht in Gladys.",
     "es": "Relojes, pulseras y básculas Huawei: pasos, corazón, SpO2, sueño y peso en Gladys."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/gboulvin/gladys-huawei-health:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/gboulvin/gladys-huawei-health:1.0.1",
   "gladys_version": ">=5.3.0",
   "cover_image": "https://raw.githubusercontent.com/gboulvin/Gladys-Huawei-Health/main/cover.png",
   "categories": ["leisure", "services"],
